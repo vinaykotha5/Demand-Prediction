@@ -1,0 +1,302 @@
+{
+  "P001": {
+    "name": "Paracetamol 500mg",
+    "status": "trained",
+    "time_seconds": 14.7,
+    "comparison": {
+      "Naive": {
+        "MAE": 91.0,
+        "RMSE": 129.5463,
+        "MAPE": 33.88,
+        "DirectionalAccuracy": 0.47
+      },
+      "XGBoost": {
+        "MAE": 51.328,
+        "RMSE": 86.0534,
+        "MAPE": 20.49,
+        "DirectionalAccuracy": 67.14
+      },
+      "LSTM": {
+        "MAE": 90.7817,
+        "RMSE": 131.7231,
+        "MAPE": 33.68,
+        "DirectionalAccuracy": 52.66
+      }
+    }
+  },
+  "P002": {
+    "name": "ORS Powder",
+    "status": "trained",
+    "time_seconds": 3.6,
+    "comparison": {
+      "Naive": {
+        "MAE": 52.1355,
+        "RMSE": 60.7586,
+        "MAPE": 53.83,
+        "DirectionalAccuracy": 3.29
+      },
+      "XGBoost": {
+        "MAE": 12.232,
+        "RMSE": 15.5977,
+        "MAPE": 10.22,
+        "DirectionalAccuracy": 61.97
+      },
+      "LSTM": {
+        "MAE": 15.3722,
+        "RMSE": 19.5738,
+        "MAPE": 12.2,
+        "DirectionalAccuracy": 48.31
+      }
+    }
+  },
+  "P003": {
+    "name": "Cough Syrup 100ml",
+    "status": "trained",
+    "time_seconds": 4.8,
+    "comparison": {
+      "Naive": {
+        "MAE": 14.5374,
+        "RMSE": 20.7512,
+        "MAPE": 18.36,
+        "DirectionalAccuracy": 4.69
+      },
+      "XGBoost": {
+        "MAE": 7.4474,
+        "RMSE": 9.8422,
+        "MAPE": 9.83,
+        "DirectionalAccuracy": 68.08
+      },
+      "LSTM": {
+        "MAE": 10.6718,
+        "RMSE": 14.4328,
+        "MAPE": 13.11,
+        "DirectionalAccuracy": 49.28
+      }
+    }
+  },
+  "P004": {
+    "name": "Cetirizine 10mg",
+    "status": "trained",
+    "time_seconds": 3.9,
+    "comparison": {
+      "Naive": {
+        "MAE": 29.257,
+        "RMSE": 33.2887,
+        "MAPE": 26.7,
+        "DirectionalAccuracy": 2.82
+      },
+      "XGBoost": {
+        "MAE": 10.4861,
+        "RMSE": 12.8868,
+        "MAPE": 10.46,
+        "DirectionalAccuracy": 64.32
+      },
+      "LSTM": {
+        "MAE": 18.6219,
+        "RMSE": 22.5366,
+        "MAPE": 17.4,
+        "DirectionalAccuracy": 52.17
+      }
+    }
+  },
+  "P005": {
+    "name": "Dolo 650",
+    "status": "trained",
+    "time_seconds": 4.4,
+    "comparison": {
+      "Naive": {
+        "MAE": 69.0607,
+        "RMSE": 104.7049,
+        "MAPE": 29.22,
+        "DirectionalAccuracy": 0.94
+      },
+      "XGBoost": {
+        "MAE": 33.4419,
+        "RMSE": 66.6421,
+        "MAPE": 14.35,
+        "DirectionalAccuracy": 63.38
+      },
+      "LSTM": {
+        "MAE": 63.3572,
+        "RMSE": 98.3861,
+        "MAPE": 26.75,
+        "DirectionalAccuracy": 56.52
+      }
+    }
+  },
+  "P006": {
+    "name": "Azithromycin 500mg",
+    "status": "trained",
+    "time_seconds": 4.4,
+    "comparison": {
+      "Naive": {
+        "MAE": 14.2944,
+        "RMSE": 20.9705,
+        "MAPE": 21.06,
+        "DirectionalAccuracy": 4.69
+      },
+      "XGBoost": {
+        "MAE": 8.9838,
+        "RMSE": 14.1366,
+        "MAPE": 14.17,
+        "DirectionalAccuracy": 61.97
+      },
+      "LSTM": {
+        "MAE": 10.7695,
+        "RMSE": 16.9686,
+        "MAPE": 15.94,
+        "DirectionalAccuracy": 50.24
+      }
+    }
+  },
+  "P007": {
+    "name": "Vitamin C 500mg",
+    "status": "trained",
+    "time_seconds": 4.1,
+    "comparison": {
+      "Naive": {
+        "MAE": 16.243,
+        "RMSE": 21.3204,
+        "MAPE": 13.8,
+        "DirectionalAccuracy": 2.35
+      },
+      "XGBoost": {
+        "MAE": 10.8801,
+        "RMSE": 14.0436,
+        "MAPE": 10.0,
+        "DirectionalAccuracy": 62.91
+      },
+      "LSTM": {
+        "MAE": 12.2245,
+        "RMSE": 15.2078,
+        "MAPE": 11.05,
+        "DirectionalAccuracy": 43.96
+      }
+    }
+  },
+  "P008": {
+    "name": "Ibuprofen 400mg",
+    "status": "trained",
+    "time_seconds": 4.0,
+    "comparison": {
+      "Naive": {
+        "MAE": 6.4159,
+        "RMSE": 8.1502,
+        "MAPE": 10.66,
+        "DirectionalAccuracy": 1.41
+      },
+      "XGBoost": {
+        "MAE": 5.5346,
+        "RMSE": 7.0473,
+        "MAPE": 9.18,
+        "DirectionalAccuracy": 68.08
+      },
+      "LSTM": {
+        "MAE": 6.2747,
+        "RMSE": 7.99,
+        "MAPE": 10.34,
+        "DirectionalAccuracy": 52.66
+      }
+    }
+  },
+  "P009": {
+    "name": "Amoxicillin 250mg",
+    "status": "trained",
+    "time_seconds": 3.8,
+    "comparison": {
+      "Naive": {
+        "MAE": 20.5748,
+        "RMSE": 29.6751,
+        "MAPE": 25.21,
+        "DirectionalAccuracy": 2.35
+      },
+      "XGBoost": {
+        "MAE": 11.0933,
+        "RMSE": 19.8917,
+        "MAPE": 14.3,
+        "DirectionalAccuracy": 66.67
+      },
+      "LSTM": {
+        "MAE": 11.1234,
+        "RMSE": 18.3378,
+        "MAPE": 15.1,
+        "DirectionalAccuracy": 54.11
+      }
+    }
+  },
+  "P010": {
+    "name": "Electral Powder",
+    "status": "trained",
+    "time_seconds": 3.9,
+    "comparison": {
+      "Naive": {
+        "MAE": 67.6822,
+        "RMSE": 73.5646,
+        "MAPE": 71.05,
+        "DirectionalAccuracy": 5.16
+      },
+      "XGBoost": {
+        "MAE": 11.076,
+        "RMSE": 14.018,
+        "MAPE": 9.9,
+        "DirectionalAccuracy": 67.61
+      },
+      "LSTM": {
+        "MAE": 16.4403,
+        "RMSE": 21.4278,
+        "MAPE": 13.4,
+        "DirectionalAccuracy": 44.44
+      }
+    }
+  },
+  "P011": {
+    "name": "Insulin Glargine",
+    "status": "trained",
+    "time_seconds": 4.2,
+    "comparison": {
+      "Naive": {
+        "MAE": 3.8364,
+        "RMSE": 5.007,
+        "MAPE": 12.37,
+        "DirectionalAccuracy": 5.63
+      },
+      "XGBoost": {
+        "MAE": 3.2538,
+        "RMSE": 4.1262,
+        "MAPE": 9.79,
+        "DirectionalAccuracy": 62.44
+      },
+      "LSTM": {
+        "MAE": 3.6301,
+        "RMSE": 4.5873,
+        "MAPE": 10.85,
+        "DirectionalAccuracy": 47.34
+      }
+    }
+  },
+  "P012": {
+    "name": "Antihistamine Tabs",
+    "status": "trained",
+    "time_seconds": 3.7,
+    "comparison": {
+      "Naive": {
+        "MAE": 13.3364,
+        "RMSE": 16.5673,
+        "MAPE": 13.64,
+        "DirectionalAccuracy": 2.35
+      },
+      "XGBoost": {
+        "MAE": 8.5912,
+        "RMSE": 10.5141,
+        "MAPE": 9.19,
+        "DirectionalAccuracy": 64.32
+      },
+      "LSTM": {
+        "MAE": 9.7973,
+        "RMSE": 12.3674,
+        "MAPE": 10.18,
+        "DirectionalAccuracy": 55.07
+      }
+    }
+  }
+}

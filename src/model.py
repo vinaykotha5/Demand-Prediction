@@ -1,49 +1,63 @@
 """
-LSTM model for pharmacy demand forecasting.
+LSTM model for pharmacy demand forecasting — v2.
+
+Supports standard Sequential LSTM and Bidirectional LSTM.
+Includes ModelCheckpoint to save the best epoch automatically.
 """
 import os
 import sys
 import numpy as np
 
-os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"  # suppress TF info logs
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 
 import tensorflow as tf
 from tensorflow.keras.models import Sequential, load_model as keras_load_model
-from tensorflow.keras.layers import LSTM, Dense, Dropout, Input
-from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
+from tensorflow.keras.layers import (
+    LSTM, Bidirectional, Dense, Dropout, Input, BatchNormalization,
+)
+from tensorflow.keras.callbacks import (
+    EarlyStopping, ReduceLROnPlateau, ModelCheckpoint,
+)
 from tensorflow.keras.optimizers import Adam
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 from config import (
-    LSTM_UNITS_1,
-    LSTM_UNITS_2,
-    DROPOUT_RATE,
-    LEARNING_RATE,
-    EPOCHS,
-    BATCH_SIZE,
-    VALIDATION_SPLIT,
-    MODEL_DIR,
-    SEQUENCE_LENGTH,
+    LSTM_UNITS_1, LSTM_UNITS_2, DROPOUT_RATE, LEARNING_RATE,
+    EPOCHS, BATCH_SIZE, VALIDATION_SPLIT, MODEL_DIR, SEQUENCE_LENGTH,
+    USE_BIDIRECTIONAL,
 )
 
 
-def build_model(input_shape: tuple) -> Sequential:
-    """Build the LSTM architecture.
+def build_model(input_shape: tuple, bidirectional: bool = None) -> Sequential:
+    """
+    Build the LSTM architecture.
 
     Args:
-        input_shape: (sequence_length, num_features)
+        input_shape  : (sequence_length, num_features)
+        bidirectional: override config.USE_BIDIRECTIONAL if specified
     """
-    model = Sequential(
-        [
-            Input(shape=input_shape),
-            LSTM(LSTM_UNITS_1, return_sequences=True),
-            Dropout(DROPOUT_RATE),
-            LSTM(LSTM_UNITS_2, return_sequences=False),
-            Dropout(DROPOUT_RATE),
-            Dense(16, activation="relu"),
-            Dense(1),
-        ]
-    )
+    if bidirectional is None:
+        bidirectional = USE_BIDIRECTIONAL
+
+    model = Sequential()
+    model.add(Input(shape=input_shape))
+
+    if bidirectional:
+        model.add(Bidirectional(LSTM(LSTM_UNITS_1, return_sequences=True)))
+    else:
+        model.add(LSTM(LSTM_UNITS_1, return_sequences=True))
+
+    model.add(Dropout(DROPOUT_RATE))
+    model.add(BatchNormalization())
+
+    if bidirectional:
+        model.add(Bidirectional(LSTM(LSTM_UNITS_2, return_sequences=False)))
+    else:
+        model.add(LSTM(LSTM_UNITS_2, return_sequences=False))
+
+    model.add(Dropout(DROPOUT_RATE))
+    model.add(Dense(16, activation="relu"))
+    model.add(Dense(1))
 
     model.compile(
         optimizer=Adam(learning_rate=LEARNING_RATE),
@@ -59,22 +73,22 @@ def train_model(
     product_id: str,
     epochs: int = None,
     batch_size: int = None,
+    bidirectional: bool = None,
 ) -> tuple:
-    """Train LSTM model for a specific product and save weights.
+    """
+    Train LSTM model for a specific product and save best weights.
 
     Returns:
         (model, history)
     """
-    if epochs is None:
-        epochs = EPOCHS
-    if batch_size is None:
-        batch_size = BATCH_SIZE
+    if epochs     is None: epochs     = EPOCHS
+    if batch_size is None: batch_size = BATCH_SIZE
 
     os.makedirs(MODEL_DIR, exist_ok=True)
     model_path = os.path.join(MODEL_DIR, f"lstm_{product_id}.keras")
 
     input_shape = (X_train.shape[1], X_train.shape[2])
-    model = build_model(input_shape)
+    model = build_model(input_shape, bidirectional=bidirectional)
 
     callbacks = [
         EarlyStopping(
@@ -90,6 +104,12 @@ def train_model(
             min_lr=1e-6,
             verbose=1,
         ),
+        ModelCheckpoint(
+            filepath=model_path,
+            monitor="val_loss",
+            save_best_only=True,
+            verbose=0,
+        ),
     ]
 
     history = model.fit(
@@ -102,9 +122,7 @@ def train_model(
         verbose=1,
     )
 
-    model.save(model_path)
-    print(f"💾 Model saved: {model_path}")
-
+    print(f"💾 Best model saved → {model_path}")
     return model, history
 
 
@@ -112,7 +130,10 @@ def load_trained_model(product_id: str):
     """Load a previously trained model for a product."""
     model_path = os.path.join(MODEL_DIR, f"lstm_{product_id}.keras")
     if not os.path.exists(model_path):
-        raise FileNotFoundError(f"No trained model found for {product_id} at {model_path}")
+        raise FileNotFoundError(
+            f"No trained model found for {product_id} at {model_path}\n"
+            "Run: python src/train.py"
+        )
     return keras_load_model(model_path)
 
 
@@ -122,42 +143,37 @@ def predict_demand(
     scaler,
     horizon: int = 30,
 ) -> np.ndarray:
-    """Predict demand for the next `horizon` days.
+    """
+    Multi-step demand forecast using autoregressive prediction.
 
     Args:
-        model: trained LSTM model
-        last_sequence: shape (sequence_length, num_features) — the last window
-        scaler: fitted MinMaxScaler to inverse-transform predictions
-        horizon: number of days to forecast
+        model        : trained LSTM model
+        last_sequence: (sequence_length, num_features) — the last window
+        scaler       : fitted MinMaxScaler to inverse-transform
+        horizon      : days to forecast
 
     Returns:
-        Array of predicted quantities for each day
+        Array of predicted quantities (non-negative integers)
     """
-    predictions = []
-    current_seq = last_sequence.copy()
+    predictions  = []
+    current_seq  = last_sequence.copy()
 
     for _ in range(horizon):
-        # Predict next value
-        pred = model.predict(current_seq.reshape(1, *current_seq.shape), verbose=0)
+        pred     = model.predict(current_seq.reshape(1, *current_seq.shape), verbose=0)
         pred_val = pred[0, 0]
         predictions.append(pred_val)
 
-        # Shift window forward: drop first row, append predicted row
-        new_row = current_seq[-1].copy()
-        new_row[0] = pred_val  # update quantity_sold (col 0)
-
-        # Increment time features slightly (approximation)
-        # In production, you'd compute exact date features
+        # Slide window: drop oldest, append new row
+        new_row    = current_seq[-1].copy()
+        new_row[0] = pred_val   # quantity_sold is column 0
         current_seq = np.vstack([current_seq[1:], new_row])
 
-    # Inverse transform predictions (quantity_sold is column 0)
+    # Inverse-transform (quantity_sold is column 0)
     predictions = np.array(predictions).reshape(-1, 1)
-
-    # Build dummy array matching scaler shape for inverse transform
-    num_features = scaler.n_features_in_
-    dummy = np.zeros((len(predictions), num_features))
+    n_features  = scaler.n_features_in_
+    dummy = np.zeros((len(predictions), n_features))
     dummy[:, 0] = predictions[:, 0]
-    inv = scaler.inverse_transform(dummy)
+    inv    = scaler.inverse_transform(dummy)
     demand = inv[:, 0]
 
     return np.maximum(demand, 0).astype(int)

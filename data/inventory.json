@@ -1,0 +1,50 @@
+{
+  "P001": {
+    "current_stock": 3600,
+    "last_updated": "never"
+  },
+  "P002": {
+    "current_stock": 2400,
+    "last_updated": "never"
+  },
+  "P003": {
+    "current_stock": 1800,
+    "last_updated": "never"
+  },
+  "P004": {
+    "current_stock": 2100,
+    "last_updated": "never"
+  },
+  "P005": {
+    "current_stock": 3300,
+    "last_updated": "never"
+  },
+  "P006": {
+    "current_stock": 1200,
+    "last_updated": "never"
+  },
+  "P007": {
+    "current_stock": 2700,
+    "last_updated": "never"
+  },
+  "P008": {
+    "current_stock": 1650,
+    "last_updated": "never"
+  },
+  "P009": {
+    "current_stock": 1350,
+    "last_updated": "never"
+  },
+  "P010": {
+    "current_stock": 2250,
+    "last_updated": "never"
+  },
+  "P011": {
+    "current_stock": 900,
+    "last_updated": "never"
+  },
+  "P012": {
+    "current_stock": 1950,
+    "last_updated": "never"
+  }
+}
